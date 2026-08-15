@@ -15,17 +15,16 @@ the stale input region only temporarily.
 
 ## The fix
 
-The patch separates the two input responsibilities:
+The patch changes only the hidden dash hit area:
 
-- The tiny 2 px edge-dwell actor remains interactive while the dock is hidden,
-  including over fullscreen windows, so moving the pointer to the screen edge
-  can still reveal the dock.
 - The full-sized dash hit area becomes non-reactive as soon as the dock starts
   hiding and becomes reactive again when it starts showing. This prevents the
   invisible dock area from consuming application input on Wayland.
+- The separate edge-dwell actor, fullscreen checks, reveal conditions, timing,
+  and animations are not changed.
 
 No actor is destroyed, so autohide animation and edge activation continue to
-work both normally and over fullscreen applications.
+behave as configured by the original extension.
 
 ## Install for the current user
 

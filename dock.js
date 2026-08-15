@@ -252,15 +252,6 @@ export let Dock = GObject.registerClass(
       return Clutter.EVENT_PROPAGATE;
     }
     _onFullScreen() {
-      // Keep the 2 px edge-dwell actor active so the dock can still be revealed
-      // over fullscreen windows. AutoHide.hide() disables only the dash's
-      // full-sized hit area while it is off-screen.
-      const inFullscreen = this._monitor?.inFullscreen ?? false;
-
-      if (inFullscreen && this.extension.autohide_dash) {
-        this.autohider.hide();
-      }
-
       // this._debouncedBeginAnimation();
       this._beginAnimation();
       this.autohider._debounceCheckHide();
