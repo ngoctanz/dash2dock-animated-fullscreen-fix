@@ -252,20 +252,10 @@ export let Dock = GObject.registerClass(
       return Clutter.EVENT_PROPAGATE;
     }
     _onFullScreen() {
-      // The dock and its edge-dwell actor are separate pieces of chrome. On
-      // Wayland the dwell actor can occasionally remain in the input region
-      // after the dock is hidden by a fullscreen window.  In that state the
-      // invisible actor consumes pointer events meant for the application.
-      //
-      // Explicitly remove both actors from input handling while this dock's
-      // monitor is fullscreen, then restore them on exit. Do not use `visible`
-      // here: the dwell actor still needs to exist for normal autohide and the
-      // animator owns the dash's visual state.
+      // Keep the 2 px edge-dwell actor active so the dock can still be revealed
+      // over fullscreen windows. AutoHide.hide() disables only the dash's
+      // full-sized hit area while it is off-screen.
       const inFullscreen = this._monitor?.inFullscreen ?? false;
-      this.dwell.reactive = !inFullscreen;
-      this.dwell.track_hover = !inFullscreen;
-      this.dash.reactive = !inFullscreen;
-      this.dash.track_hover = !inFullscreen;
 
       if (inFullscreen && this.extension.autohide_dash) {
         this.autohider.hide();

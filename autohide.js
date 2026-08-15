@@ -143,12 +143,16 @@ export let AutoHide = class {
   }
 
   show() {
-    if (!this.dock._monitor || this.dock._monitor.inFullscreen) {
+    if (!this.dock._monitor) {
       return;
     }
     this._dwell = 0;
     this.frameDelay = 0;
     this._shown = true;
+    // Only the tiny edge-dwell actor should receive input while hidden. Make
+    // the actual dash interactive again as soon as it starts sliding in.
+    this.dock.dash.reactive = true;
+    this.dock.dash.track_hover = true;
     this.dock.slideIn();
   }
 
@@ -156,6 +160,11 @@ export let AutoHide = class {
     this._dwell = 0;
     this.frameDelay = 10;
     this._shown = false;
+    // A translated/transparent dash may remain in Mutter's input region on
+    // Wayland. Disable its full-sized hit area; DockDwell remains reactive at
+    // the screen edge and can still call show().
+    this.dock.dash.reactive = false;
+    this.dock.dash.track_hover = false;
     this.dock.slideOut();
   }
 

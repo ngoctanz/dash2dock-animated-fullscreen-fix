@@ -15,12 +15,17 @@ the stale input region only temporarily.
 
 ## The fix
 
-When GNOME reports a fullscreen-state change, `dock.js` now explicitly makes
-both the edge-dwell actor and the dash non-reactive on the affected fullscreen
-monitor. Their normal input behavior is restored when fullscreen ends.
+The patch separates the two input responsibilities:
 
-The patch does not hide or destroy either actor, so normal autohide animation
-and edge activation continue to work outside fullscreen.
+- The tiny 2 px edge-dwell actor remains interactive while the dock is hidden,
+  including over fullscreen windows, so moving the pointer to the screen edge
+  can still reveal the dock.
+- The full-sized dash hit area becomes non-reactive as soon as the dock starts
+  hiding and becomes reactive again when it starts showing. This prevents the
+  invisible dock area from consuming application input on Wayland.
+
+No actor is destroyed, so autohide animation and edge activation continue to
+work both normally and over fullscreen applications.
 
 ## Install for the current user
 
