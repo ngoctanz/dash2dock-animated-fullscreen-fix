@@ -1,4 +1,4 @@
-# Dash2Dock Animated fullscreen input fix
+# Dash2Dock Animated hidden input-region fix
 
 This repository is an unofficial patched copy of version 92 of
 [Dash2Dock Animated](https://github.com/icedman/dash2dock-lite), an original
@@ -8,10 +8,10 @@ fix for newer GNOME releases and is not an official upstream release.
 
 ## The bug
 
-With autohide enabled on GNOME 50/Wayland, the dock can visually hide behind a
-fullscreen application while its transparent input actors continue consuming
-pointer events near the dock edge. Disabling and enabling the extension clears
-the stale input region only temporarily.
+With autohide enabled on GNOME 50/Wayland, the dock can disappear visually while
+its full-sized input actor continues consuming pointer events over application
+content. Disabling and enabling the extension clears the stale input region only
+temporarily.
 
 ## The fix
 

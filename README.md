@@ -1,15 +1,91 @@
 # Dash2Dock Animated
 
 > [!IMPORTANT]
-> This is an unofficial compatibility-fix fork. **Dash2Dock Animated is an
-> original project by [icedman](https://github.com/icedman)**; the original
-> source is available at
-> [icedman/dash2dock-lite](https://github.com/icedman/dash2dock-lite).
+> This is an unofficial compatibility-fix fork of
+> [Dash2Dock Animated](https://github.com/icedman/dash2dock-lite), an original
+> project by [icedman](https://github.com/icedman) and its contributors.
 >
-> This fork does not claim ownership of the original project. It only adds a
-> fullscreen input-region fix for newer GNOME releases, currently GNOME 50 on
-> Wayland. See [README-FULLSCREEN-FIX.md](README-FULLSCREEN-FIX.md) for the
-> patch details and installation instructions.
+> This fork does not claim ownership of the original project and is not an
+> official upstream release. It contains one focused compatibility fix for the
+> hidden dock input region on newer GNOME/Wayland sessions.
+
+## What problem does this fork fix?
+
+With autohide enabled, the dock sometimes disappears visually but its previous
+area still intercepts pointer input. Content behind that invisible area cannot
+be clicked, selected, dragged, or scrolled. Disabling and re-enabling the
+extension clears the problem temporarily, but it can return later.
+
+This has been observed with Dash2Dock Animated v92 on GNOME 50/Wayland and is
+especially noticeable when an application occupies the dock area.
+
+## Why does it happen?
+
+Dash2Dock Animated uses two separate GNOME Shell/Clutter actors:
+
+- `dash` is the full-sized dock containing the icons.
+- `DockDwell` is a tiny 2 px strip at the screen edge that detects the pointer
+  and reveals the dock.
+
+Autohide moves the `dash` outside the visible screen using translation. Moving
+an actor visually does not automatically make it non-interactive: its
+`reactive` and `track_hover` properties can remain enabled. On affected
+GNOME/Wayland sessions, the hidden dash can therefore remain in Mutter's input
+region and act like a transparent layer over the application.
+
+Restarting the extension rebuilds its actors and input regions, which explains
+why toggling the extension appears to fix the issue only temporarily.
+
+## What is changed?
+
+Only the full-sized `dash` hit area is changed in `autohide.js`:
+
+```js
+// When the dock starts showing
+this.dock.dash.reactive = true;
+this.dock.dash.track_hover = true;
+
+// When the dock starts hiding
+this.dock.dash.reactive = false;
+this.dock.dash.track_hover = false;
+```
+
+The resulting behavior is:
+
+1. While the dock is visible, its hit area is enabled and icons behave normally.
+2. As soon as the dock starts hiding, its full-sized hit area is disabled, so
+   pointer events reach the application behind it.
+3. The existing edge trigger reveals the dock as before.
+4. When the dock starts showing, its hit area is enabled again.
+
+The patch does **not** change `DockDwell`, reveal conditions, pressure sensing,
+fullscreen checks, animation timing, layout, appearance, or any theme option.
+The original edge-to-reveal behavior is left untouched.
+
+## Install this patched build
+
+```bash
+git clone https://github.com/ngoctanz/dash2dock-animated-fullscreen-fix.git
+cd dash2dock-animated-fullscreen-fix
+./install-local.sh
+```
+
+The installer creates a timestamped backup of the currently installed extension
+before copying the patched runtime files. Log out and back in afterward; GNOME
+Shell cannot be restarted with `Alt+F2`, `r` on Wayland.
+
+An extension update may overwrite this patch. Reinstall this build or switch to
+a newer upstream release when an equivalent fix becomes available there.
+
+## Scope of the fork
+
+The functional patch is intentionally limited to `AutoHide.show()` and
+`AutoHide.hide()` in `autohide.js`. All other extension behavior remains from
+the original Dash2Dock Animated v92 source.
+
+The original project documentation continues below.
+
+---
 
 A GNOME Shell 40+ Extension
 
@@ -55,7 +131,11 @@ A GNOME Shell 40+ Extension
 
 * GNOME Shell (version 42+)
 
-### Installation
+### Upstream Installation
+
+> The commands in this upstream section install the original project and do
+> not include this fork's input-region fix. To install the fix, use
+> [Install this patched build](#install-this-patched-build) above.
 
 #### Manual Installation
 
