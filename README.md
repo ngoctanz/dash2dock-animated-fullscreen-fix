@@ -1,8 +1,15 @@
 # Dash2Dock Animated
 
-> **Patched build:** This fork includes a GNOME 50/Wayland fullscreen input
-> fix. See [README-FULLSCREEN-FIX.md](README-FULLSCREEN-FIX.md) for the cause,
-> patch behavior, and installation instructions.
+> [!IMPORTANT]
+> This is an unofficial compatibility-fix fork. **Dash2Dock Animated is an
+> original project by [icedman](https://github.com/icedman)**; the original
+> source is available at
+> [icedman/dash2dock-lite](https://github.com/icedman/dash2dock-lite).
+>
+> This fork does not claim ownership of the original project. It only adds a
+> fullscreen input-region fix for newer GNOME releases, currently GNOME 50 on
+> Wayland. See [README-FULLSCREEN-FIX.md](README-FULLSCREEN-FIX.md) for the
+> patch details and installation instructions.
 
 A GNOME Shell 40+ Extension
 

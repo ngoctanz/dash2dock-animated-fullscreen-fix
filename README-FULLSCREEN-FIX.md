@@ -1,7 +1,10 @@
 # Dash2Dock Animated fullscreen input fix
 
-This repository is a patched copy of
-[Dash2Dock Animated](https://github.com/icedman/dash2dock-lite), version 92.
+This repository is an unofficial patched copy of version 92 of
+[Dash2Dock Animated](https://github.com/icedman/dash2dock-lite), an original
+project by [icedman](https://github.com/icedman). All original project credit
+belongs to its author and contributors. This fork only provides a compatibility
+fix for newer GNOME releases and is not an official upstream release.
 
 ## The bug
 
